@@ -1,0 +1,13 @@
+MyVocal Multi-Context WebSocket TTS SDKs
+Copyright 2026 MyVocal
+
+This product is licensed under the Apache License, Version 2.0.
+
+The Python distribution uses the websockets project.
+The Java distribution uses OkHttp, Okio, and JSON-java.
+The Go distribution uses gorilla/websocket.
+
+Their respective licenses and copyright notices remain the property of their
+authors. Dependency versions and installation requirements are documented in
+each language package.
+

@@ -1,0 +1,122 @@
+{
+  "name": "MyVocal Enterprise Multi-Context WebSocket TTS",
+  "version": "1.0.0",
+  "endpoint": {
+    "defaultBaseUrl": "wss://api.voicelibrary.co",
+    "path": "/enterprise/v1/tts/{voice_id}/websocket/multi",
+    "regionalBaseUrls": {
+      "us": "wss://api.us.voicelibrary.co",
+      "eu": "wss://api.eu.voicelibrary.co",
+      "jp": "wss://api.jp.voicelibrary.co"
+    },
+    "authHeader": "api-key"
+  },
+  "connection": {
+    "priority": {
+      "required": true,
+      "default": "dedicated_concurrency",
+      "supported": ["dedicated_concurrency"]
+    },
+    "model_id": {
+      "required": true,
+      "default": "flash_v2_5",
+      "supported": ["flash_v2_5", "multilingual_v2"]
+    },
+    "format": {
+      "required": false,
+      "default": "pcm_16000",
+      "acceptedInputAliases": ["format", "output_format"],
+      "wireName": "format",
+      "supported": [
+        "mp3_44100_64",
+        "mp3_44100_96",
+        "mp3_44100_128",
+        "mp3_44100_192",
+        "pcm_8000",
+        "pcm_16000",
+        "pcm_22050",
+        "pcm_24000",
+        "pcm_44100",
+        "ulaw_8000"
+      ]
+    },
+    "language_code": {
+      "required": false,
+      "pattern": "^[a-z]{2,3}$"
+    },
+    "idleTimeout": {
+      "required": false,
+      "default": 20,
+      "minimum": 1,
+      "maximum": 180
+    },
+    "directStreaming": {
+      "required": false,
+      "type": "boolean"
+    },
+    "Timestamps": {
+      "required": false,
+      "type": "boolean"
+    },
+    "seed": {
+      "required": false,
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "auto_mode": {
+      "required": false,
+      "type": "boolean"
+    }
+  },
+  "context": {
+    "maximumActive": 5,
+    "contextIdRequired": true,
+    "initialTextDefault": " ",
+    "voiceSettingsFirstMessageOnly": true,
+    "voiceSettings": {
+      "stability": {"minimum": 0.0, "maximum": 1.0},
+      "similarity_boost": {"minimum": 0.0, "maximum": 1.0},
+      "style": {"minimum": 0.0, "maximum": 1.0},
+      "use_speaker_boost": {"type": "boolean"}
+    },
+    "optionalInitializationFields": [
+      "previous_text",
+      "next_text",
+      "generation_config"
+    ]
+  },
+  "messages": [
+    "initialize",
+    "text",
+    "flush",
+    "keep_alive",
+    "close_context",
+    "close_socket"
+  ],
+  "responses": {
+    "contextIdAliases": ["context_id", "contextId"],
+    "finalAliases": ["is_final", "isFinal"],
+    "audioEncodings": ["base64_json", "binary_frame"],
+    "optionalFields": ["timestamps", "alignment"]
+  },
+  "lifecycle": {
+    "normalCompletion": [
+      "send_text",
+      "flush",
+      "close_context",
+      "wait_context_final"
+    ],
+    "bargeIn": ["close_context"],
+    "closeContextIsImplicitFlush": false,
+    "emptyOrMissingAudioFinalIsSuccess": true,
+    "noAutomaticTextReplay": true,
+    "maximumControlQueue": 16,
+    "readerMustNotBlockOnCallbacks": true,
+    "writesMustBeSerialized": true
+  },
+  "status": {
+    "runtimeVerification": "pending_explicit_authorization",
+    "apifoxId": 3758588,
+    "projectId": 6951830
+  }
+}
