@@ -1,76 +1,62 @@
-# MyVocal Multi-Context WSS SDK for Go
+# MyVocal Multi-Context TTS SDK for Go
 
-Official Go SDK for the MyVocal enterprise Multi-Context WebSocket TTS API.
+Requires Go 1.20 or later, an enterprise TTS API Key with dedicated concurrency, and a voice ID. Use one voice with up to five active synthesis contexts on a connection.
 
-## Requirements
+## Install
 
-- Go 1.20+
-
-## Local ZIP use
-
-After extracting the official Release ZIP, verify it directly:
+From your application's Go module:
 
 ```bash
-go test ./...
-go vet ./...
+go get github.com/MyVocal-AI/myvocal-multi-context-wss-sdk-go@v1.0.1
 ```
 
-Before the GitHub repository exists, a local application can use a temporary
-`replace` directive:
+To use the [downloadable ZIP](https://github.com/MyVocal-AI/myvocal-multi-context-wss-sdk-go/releases/tag/v1.0.1), extract it beside your application and add the following to your application's `go.mod`:
 
 ```go
-replace github.com/MyVocal-AI/myvocal-multi-context-wss-sdk-go => ../myvocal-multi-context-wss-sdk-go-1.0.0
+require github.com/MyVocal-AI/myvocal-multi-context-wss-sdk-go v1.0.1
+
+replace github.com/MyVocal-AI/myvocal-multi-context-wss-sdk-go => ../myvocal-multi-context-wss-sdk-go-1.0.1
 ```
 
-## Minimal flow
+Adjust the relative path to the extracted folder and run `go mod tidy`.
 
-```go
-package main
+## Models and audio
 
-import (
-    "context"
-    "os"
-    "time"
+Supported models: `flash_v2_5` and `multilingual_v2`. The example uses `flash_v2_5` with `pcm_16000`; edit its connection options to use another supported model or format.
 
-    multiwss "github.com/MyVocal-AI/myvocal-multi-context-wss-sdk-go"
-)
+`myvocal_v4` and `myvocal_v3_turbo` require the [dialogue SDKs](https://api-docs.myvocal.ai/3892090w0) and are not supported by this endpoint.
 
-func main() {
-    options := multiwss.DefaultConnectionOptions(
-        os.Getenv("MYVOCAL_VOICE_ID"))
-    options.LanguageCode = "en"
-    options.IdleTimeout = 120
+## Run the example
 
-    client := multiwss.NewClient(
-        os.Getenv("MYVOCAL_TTS_API_KEY"),
-        options,
-        multiwss.ClientCallbacks{})
-    if err := client.Connect(context.Background()); err != nil {
-        panic(err)
-    }
-    synthesis, err := client.OpenContext(
-        multiwss.ContextOptions{ContextID: "turn_1"})
-    if err != nil {
-        panic(err)
-    }
-    if err := synthesis.SendText("Hello from MyVocal.", false); err != nil {
-        panic(err)
-    }
-    wait, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-    defer cancel()
-    if err := synthesis.Finish(wait); err != nil {
-        panic(err)
-    }
-    if err := client.CloseSocket(wait); err != nil {
-        panic(err)
-    }
-}
+Set your Key and voice ID:
+
+```bash
+export MYVOCAL_TTS_API_KEY='YOUR_API_KEY'
+export MYVOCAL_VOICE_ID='YOUR_VOICE_ID'
 ```
 
-Normal completion is `flush -> close_context -> is_final`. Calling
-`close_context` without `flush` is cancellation and does not implicitly flush
-buffered text. An empty final audio field is a valid completion frame.
+PowerShell:
 
-Callbacks run outside the WebSocket reader loop. Callback panics are isolated
-and reported through `OnCallbackError`. The SDK serializes writes and never
-reconnects or replays text automatically.
+```powershell
+$env:MYVOCAL_TTS_API_KEY='YOUR_API_KEY'
+$env:MYVOCAL_VOICE_ID='YOUR_VOICE_ID'
+```
+
+From the extracted SDK folder:
+
+```bash
+go run ./examples/basic
+```
+
+Running the example makes a real synthesis request and consumes character usage. It reports audio byte counts; add file or playback handling to consume the audio.
+
+## Use in your application
+
+- Normal completion requires flush, context closure, and a final event. Closing a context without flushing is cancellation.
+- [Usage guide](USAGE.md): options, audio callbacks, completion, cancellation, timeouts, and errors.
+- [API reference](https://api-docs.myvocal.ai/3758588w0): supported fields and messages.
+- [Character usage](https://api-docs.myvocal.ai/336818975e0).
+
+The SDK does not automatically reconnect or replay text.
+
+Licensed under [Apache License 2.0](LICENSE). Dependency notices are in [NOTICE](NOTICE).

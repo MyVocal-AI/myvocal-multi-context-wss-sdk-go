@@ -1,6 +1,6 @@
 {
   "name": "MyVocal Enterprise Multi-Context WebSocket TTS",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "endpoint": {
     "defaultBaseUrl": "wss://api.voicelibrary.co",
     "path": "/enterprise/v1/tts/{voice_id}/websocket/multi",
@@ -15,17 +15,25 @@
     "priority": {
       "required": true,
       "default": "dedicated_concurrency",
-      "supported": ["dedicated_concurrency"]
+      "supported": [
+        "dedicated_concurrency"
+      ]
     },
     "model_id": {
       "required": true,
       "default": "flash_v2_5",
-      "supported": ["flash_v2_5", "multilingual_v2"]
+      "supported": [
+        "flash_v2_5",
+        "multilingual_v2"
+      ]
     },
     "format": {
       "required": false,
       "default": "pcm_16000",
-      "acceptedInputAliases": ["format", "output_format"],
+      "acceptedInputAliases": [
+        "format",
+        "output_format"
+      ],
       "wireName": "format",
       "supported": [
         "mp3_44100_64",
@@ -74,10 +82,21 @@
     "initialTextDefault": " ",
     "voiceSettingsFirstMessageOnly": true,
     "voiceSettings": {
-      "stability": {"minimum": 0.0, "maximum": 1.0},
-      "similarity_boost": {"minimum": 0.0, "maximum": 1.0},
-      "style": {"minimum": 0.0, "maximum": 1.0},
-      "use_speaker_boost": {"type": "boolean"}
+      "stability": {
+        "minimum": 0.0,
+        "maximum": 1.0
+      },
+      "similarity_boost": {
+        "minimum": 0.0,
+        "maximum": 1.0
+      },
+      "style": {
+        "minimum": 0.0,
+        "maximum": 1.0
+      },
+      "use_speaker_boost": {
+        "type": "boolean"
+      }
     },
     "optionalInitializationFields": [
       "previous_text",
@@ -94,10 +113,22 @@
     "close_socket"
   ],
   "responses": {
-    "contextIdAliases": ["context_id", "contextId"],
-    "finalAliases": ["is_final", "isFinal"],
-    "audioEncodings": ["base64_json", "binary_frame"],
-    "optionalFields": ["timestamps", "alignment"]
+    "contextIdAliases": [
+      "context_id",
+      "contextId"
+    ],
+    "finalAliases": [
+      "is_final",
+      "isFinal"
+    ],
+    "audioEncodings": [
+      "base64_json",
+      "binary_frame"
+    ],
+    "optionalFields": [
+      "timestamps",
+      "alignment"
+    ]
   },
   "lifecycle": {
     "normalCompletion": [
@@ -106,17 +137,11 @@
       "close_context",
       "wait_context_final"
     ],
-    "bargeIn": ["close_context"],
+    "bargeIn": [
+      "close_context"
+    ],
     "closeContextIsImplicitFlush": false,
     "emptyOrMissingAudioFinalIsSuccess": true,
-    "noAutomaticTextReplay": true,
-    "maximumControlQueue": 16,
-    "readerMustNotBlockOnCallbacks": true,
-    "writesMustBeSerialized": true
-  },
-  "status": {
-    "runtimeVerification": "pending_explicit_authorization",
-    "apifoxId": 3758588,
-    "projectId": 6951830
+    "noAutomaticTextReplay": true
   }
 }
